@@ -1,5 +1,6 @@
 import requests
 from bs4 import BeautifulSoup as Bs
+import json
 
 
 def clearing(s):
@@ -26,5 +27,10 @@ for i in count_list:
         if i%2 == 0:
             name_2.append(name[i])
     price = ul.select('span.css-z3vg5b')
-    for i in range(len(name_2)):
-        print(clearing(name_2[i].text) + ' - ' + clearing(price[i].text))
+
+    with open("epic.json", "w") as write_file:
+        for i in range(len(name_2)):
+            data = {'product_name': name_2[i].text,
+                    'price_range': price[i].text}
+            print(clearing(name_2[i].text) + ' - ' + clearing(price[i].text))
+            json.dump(data, write_file)
