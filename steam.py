@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup as Bs
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+import json
 
 
 def clearing(s):
@@ -41,5 +42,22 @@ soup = Bs(html_source, 'html.parser')
 div = soup.find('div', class_='search_results')
 name = div.select('span.title')
 price = div.select('div.search_price')
-for i in range(len(name)):
-    print(clearing(name[i].text) + ' - ' + clearing(price[i].text))
+#for i in range(len(name)):
+    #print(clearing(name[i].text) + ' - ' + clearing(price[i].text))
+product_name = []
+price_range = []
+for i in name:
+    product_name.append(clearing(i.text))
+for i in price:
+    s = clearing(i.text)
+    if s.count('pуб') > 1:
+        index = s.find('.')
+        price_range.append(s[index + 1:])
+    else:
+        price_range.append(clearing(i.text))
+with open("steam.json", "w") as write_file:
+    for i in range(len(product_name)):
+        data = {'product_name': product_name[i],
+                'price_range': price_range[i]}
+        print(product_name[i] + ' - ' + price_range[i])
+        json.dump(data, write_file)
