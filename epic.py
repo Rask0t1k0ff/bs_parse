@@ -13,9 +13,10 @@ url = 'https://www.epicgames.com/store/ru/browse?sortBy=releaseDate&sortDir=DESC
 count = 0
 count_list = []
 
-for i in range(21):
+for i in range(22):
     count_list.append(str(count))
     count += 40
+data_list = []
 with open("epic.json", "w") as write_file:
     for i in count_list:
         html = requests.get(url+i).text
@@ -27,11 +28,10 @@ with open("epic.json", "w") as write_file:
             if i%2 == 0:
                 name_2.append(name[i])
         price = ul.select('span.css-z3vg5b')
-
-        data_list = []
         for i in range(len(name_2)):
             data = {'product_name': name_2[i].text,
                         'price_range': price[i].text}
             print(clearing(name_2[i].text) + ' - ' + clearing(price[i].text))
             data_list.append(data)
+    print(data_list)
     json.dump(data_list, write_file)
