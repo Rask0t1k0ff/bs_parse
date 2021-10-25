@@ -16,21 +16,22 @@ count_list = []
 for i in range(21):
     count_list.append(str(count))
     count += 40
+with open("epic.json", "w") as write_file:
+    for i in count_list:
+        html = requests.get(url+i).text
+        soup = Bs(html, 'html.parser')
+        ul = soup.find('ul', class_='css-cnqlhg')
+        name = ul.select('div.css-1h2ruwl')
+        name_2 = []
+        for i in range(len(name)):
+            if i%2 == 0:
+                name_2.append(name[i])
+        price = ul.select('span.css-z3vg5b')
 
-for i in count_list:
-    html = requests.get(url+i).text
-    soup = Bs(html, 'html.parser')
-    ul = soup.find('ul', class_='css-cnqlhg')
-    name = ul.select('div.css-1h2ruwl')
-    name_2 = []
-    for i in range(len(name)):
-        if i%2 == 0:
-            name_2.append(name[i])
-    price = ul.select('span.css-z3vg5b')
-
-    with open("epic.json", "w") as write_file:
+        data_list = []
         for i in range(len(name_2)):
             data = {'product_name': name_2[i].text,
-                    'price_range': price[i].text}
+                        'price_range': price[i].text}
             print(clearing(name_2[i].text) + ' - ' + clearing(price[i].text))
-            json.dump(data, write_file)
+            data_list.append(data)
+    json.dump(data_list, write_file)
