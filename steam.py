@@ -56,8 +56,10 @@ for i in price:
     else:
         price_range.append(clearing(i.text))
 with open("steam.json", "w") as write_file:
+    data_list = []
     for i in range(len(product_name)):
         data = {'product_name': product_name[i],
                 'price_range': price_range[i]}
         print(product_name[i] + ' - ' + price_range[i])
-        json.dump(data, write_file)
+        data_list.append(data)
+    json.dump(data_list, write_file)
