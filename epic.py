@@ -1,5 +1,5 @@
-import requests
 from bs4 import BeautifulSoup as Bs
+import requests
 import json
 
 
@@ -28,10 +28,12 @@ with open("epic.json", "w") as write_file:
             if i%2 == 0:
                 name_2.append(name[i])
         price = ul.select('span.css-z3vg5b')
+        href = ul.select('a.css-1jx3eyg')
         for i in range(len(name_2)):
             data = {'product_name': name_2[i].text,
-                        'price_range': price[i].text}
-            print(clearing(name_2[i].text) + ' - ' + clearing(price[i].text))
+                    'price_range': price[i].text,
+                    'product_href': 'https://www.epicgames.com' + href[i]['href']}
+            print(clearing(name_2[i].text) + ' - ' + clearing(price[i].text) + ' - ' + href[i]['href'])
             data_list.append(data)
     print(data_list)
     json.dump(data_list, write_file)
