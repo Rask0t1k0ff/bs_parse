@@ -9,7 +9,7 @@ def clearing(s):
     return s
 
 
-url = 'https://www.epicgames.com/store/ru/browse?sortBy=releaseDate&sortDir=DESC&count=40&start='
+url = 'https://www.epicgames.com/store/en-US/browse?sortBy=releaseDate&sortDir=DESC&count=40&start='
 count = 0
 count_list = []
 
@@ -24,16 +24,28 @@ with open("epic.json", "w") as write_file:
         ul = soup.find('ul', class_='css-cnqlhg')
         name = ul.select('div.css-1h2ruwl')
         name_2 = []
-        for i in range(len(name)):
-            if i%2 == 0:
-                name_2.append(name[i])
+        for j in range(len(name)):
+            if j%2 == 0:
+                name_2.append(name[j])
         price = ul.select('span.css-z3vg5b')
         href = ul.select('a.css-1jx3eyg')
-        for i in range(len(name_2)):
-            data = {'product_name': name_2[i].text,
-                    'price_range': price[i].text,
-                    'product_href': 'https://www.epicgames.com' + href[i]['href']}
-            print(clearing(name_2[i].text) + ' - ' + clearing(price[i].text) + ' - ' + href[i]['href'])
+        #img_blocks = ul.find_all('div', attrs={'data-component': 'Picture'})
+        #print(img_blocks)
+        for j in range(len(name_2)):
+            img = ul.find('img', attrs={'alt': name_2[j].text})
+            print(img)
+            if img['src'][0] == 'd':
+                data = {'product_name': name_2[j].text,
+                        'price_range': price[j].text,
+                        'product_href': 'https://www.epicgames.com' + href[j]['href'],
+                        'product_img': img['data-image'].replace(' ', '%20')}
+                print(clearing(name_2[j].text) + ' - ' + clearing(price[j].text) + ' - ' + href[j]['href'] + ' - ' + img['data-image'] + ' ' + i)
+            else:
+                data = {'product_name': name_2[j].text,
+                        'price_range': price[j].text,
+                        'product_href': 'https://www.epicgames.com' + href[j]['href'],
+                        'product_img': img['src'].replace(' ', '%20')}
+                print(clearing(name_2[j].text) + ' - ' + clearing(price[j].text) + ' - ' + href[j]['href'] + ' - ' + img['src'] + ' ' + i)
             data_list.append(data)
     print(data_list)
     json.dump(data_list, write_file)

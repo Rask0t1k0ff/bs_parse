@@ -13,7 +13,7 @@ def clearing(s):
 
 browser = webdriver.Chrome(ChromeDriverManager().install())    # here path of driver if it didn't find it.
 
-base = "https://store.steampowered.com/search/?term="
+base = "https://store.steampowered.com/search/?l=english&term="
 
 browser.get(base)
 
@@ -42,11 +42,13 @@ div = soup.find('div', class_='search_results')
 name = div.select('span.title')
 price = div.select('div.search_price')
 href = div.find_all('a', href=True)
+imgs = div.find_all('img')
 #for i in range(len(name)):
     #print(clearing(name[i].text) + ' - ' + clearing(price[i].text))
 product_name = []
 price_range = []
 product_href = []
+product_img = []
 for i in name:
     product_name.append(clearing(i.text))
 for i in price:
@@ -58,12 +60,15 @@ for i in price:
         price_range.append(clearing(i.text))
 for i in href:
     product_href.append(i['href'])
+for i in imgs:
+    product_img.append(i['src'])
 with open("steam.json", "w") as write_file:
     data_list = []
     for i in range(len(product_name)):
         data = {'product_name': product_name[i],
                 'price_range': price_range[i],
-                'product_href': product_href[i]}
-        print(product_name[i] + ' - ' + price_range[i] + ' - ' + product_href[i])
+                'product_href': product_href[i],
+                'product_img': product_img[i]}
+        print(product_name[i] + ' - ' + price_range[i] + ' - ' + product_href[i] + ' - ' + product_img[i])
         data_list.append(data)
     json.dump(data_list, write_file)

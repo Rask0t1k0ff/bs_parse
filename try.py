@@ -21,3 +21,5 @@ for i in range(len(name)):
     print(clearing(name[i].text))
 for i in price:
     print(clearing(i.text))
+for i in block.find_all('a', href=True):
+    print(i['href'])
