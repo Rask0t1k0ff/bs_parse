@@ -1,25 +1,32 @@
-import requests
-from bs4 import BeautifulSoup as Bs
+from bs4 import BeautifulSoup
 from selenium import webdriver
 from webdriver_manager.chrome import ChromeDriverManager
 import time
+import json
+
+driver = webdriver.Chrome(ChromeDriverManager().install())    # here path of driver if it didn't find it.
 
 
-def clearing(s):
-    s = s.strip()
-    s = s.replace("’", "'")
-    return s
+def expand_shadow_element(element):
+  shadow_root = driver.execute_script('return arguments[0].shadowRoot', element)
+  return shadow_root
 
+driver.get("https://eu.shop.battle.net/en-us/family/world-of-warcraft")
+time.sleep(5)
+root = driver.find_elements_by_xpath("//div[@id='game']//meka-browsing-card")
+print(root)
 
-url = 'https://store.steampowered.com/search/?term='
-html_source = requests.get(url).text
-soup = Bs(html_source, 'html.parser')
-block = soup.find('div', class_='search_results')
-name = block.select('span.title')
-price = block.select('div.search_price')
-for i in range(len(name)):
-    print(clearing(name[i].text))
-for i in price:
-    print(clearing(i.text))
-for i in block.find_all('a', href=True):
-    print(i['href'])
+html_of_interest=driver.execute_script('return arguments[0].innerHTML',root[0])
+sel_soup=BeautifulSoup(html_of_interest, 'html.parser')
+print(sel_soup )# empty root not expande
+print('')
+print('')
+print('')
+print('')
+print('')
+
+shadow_root1 = expand_shadow_element(root[0])
+
+html_of_interest=driver.execute_script('return arguments[0].innerHTML',shadow_root1)
+sel_soup=BeautifulSoup(html_of_interest, 'html.parser')
+print(sel_soup)
