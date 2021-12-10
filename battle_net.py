@@ -28,6 +28,7 @@ games_block = soup.find('section', class_='app-container')
 games_list = games_block.find_all('a', class_='ng-star-inserted')
 data_list = []
 print(games_list)
+name_list = []
 for i in range(len(games_list)):
     if i != 1 and i != len(games_list)-1:
         new_url = base_url + games_list[i]['href']
@@ -57,12 +58,15 @@ for i in range(len(games_list)):
             sel_soup = Bs(html_of_interest, 'html.parser')
             price_range = sel_soup.find('span', class_='meka-price-label--details__standard-price').text
             product_href = base_url + link_list[j]['href']
-            if price_range != 'Learn More':
+            if price_range != 'Learn More' and not (clearing(product_name) in name_list):
+                if price_range.find('RUB') != -1:
+                    price_range = price_range.replace('RUB', '') + ' руб'
                 print(product_name + ' - ' + price_range + ' - ' + product_href + ' - ' + product_img)
                 data_dict = {'product_name': clearing(product_name),
                     'price_range': clearing(price_range),
                     'product_href': product_href,
                     'product_img': product_img}
+                name_list.append(clearing(product_name))
                 data_list.append(data_dict)
 with open("battle_net.json", "w") as write_file:
     json.dump(data_list, write_file)

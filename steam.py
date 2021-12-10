@@ -21,6 +21,7 @@ SCROLL_PAUSE_TIME = 0.9
 
 # Get scroll height
 last_height = browser.execute_script("return document.body.scrollHeight")
+k = 0
 
 while True:
     # Scroll down to bottom
@@ -31,7 +32,8 @@ while True:
 
     # Calculate new scroll height and compare with last scroll height
     new_height = browser.execute_script("return document.body.scrollHeight")
-    if new_height == last_height:
+    k += 1
+    if new_height == last_height or k == 1000:
         break
     last_height = new_height
 
